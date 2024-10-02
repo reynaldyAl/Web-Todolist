@@ -34,6 +34,7 @@ Jika Anda ingin berkontribusi pada proyek ini, silakan lakukan langkah-langkah b
    git checkout -b nama-fitur-baru
 3. Lakukan perubahan dan commit:
    ```bash
+   git add .
    git commit -m "Menambahkan fitur baru"
 4. Push ke branch Anda:
    ```bash
