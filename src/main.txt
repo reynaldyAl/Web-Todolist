@@ -1,1 +1,3 @@
 Nah, Ini adalah tempat untuk membuat sesuatu seperti jika ada kode yang sebaiknya dipisah dengan folder utama
+
+Silahkan buat folder disini untuk diperlukan seperti gambar, atau apapun itu
