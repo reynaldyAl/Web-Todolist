@@ -1,4 +1,4 @@
-import { User } from './user.js';
+import { User } from '../../H071231057R/web/Assets/javaScript/user.js';
 
 // sessionStorage sama localStorage itu penyimpanan di browser. jadi kalau di close browsernya hilang semua juga datanya lagi. karena tidak bisa menggunakan database atau server jadi datanya disimpan di sini.
 
