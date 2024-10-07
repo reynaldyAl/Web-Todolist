@@ -145,8 +145,6 @@ function renderCompletedTasks() {
     });
 }
 
-
-
 document.getElementById('priority-btn').addEventListener('click', function() {
     this.classList.toggle('important');
 });
