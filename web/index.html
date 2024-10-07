@@ -3,14 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index Page</title>
+    <title>Task Management for Students</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #fff;
+        }
+
+        .navbar {
+            background-color: transparent;
+            box-shadow: 0 2px 4px rgba(129, 240, 197, 0.1);
+            position: sticky;
+            top: 0;
+        }
+
+        .navbar .container img {
+            width: 70px;
+            height: auto;
+        }
+
+        .login-button {
+        background-color: orangered;
+        color: white;
+        font-size:14px;
+        padding: 8px 20px;
+        border-radius: 50px;
+        text-decoration:none;
+        transition: 0.3s background-color;
+        }
+
+        .login-button:hover {
+            background-color: darkorange;
+
+        }
+        .hero-section {
+            background-color: #ffffff;
+            color: #333;
+            text-align: center;
+            padding: 50px 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 20px;
+            border-radius: 30px;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .hero-section p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .button {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            padding: 15px 30px;
+            width: 200px;
+            margin: 0 auto;
+            background-color: orangered;
+            color: #fff;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: rgb(252, 146, 17);
+        }
+
+        .nav-link:hover {
+            color: #0ab660;
+        }
+
+        .carousel-item {
+            padding: 20px;
+        }
+        .carousel-item .card {
+            border-radius: 15px;
+            background-color: #f5f8ff;
+        }
+        .star-rating {
+            color: orangered;
+            font-size: 1.2rem;
+        }
+        .customer-review {
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+        .customer-name {
+            font-weight: bold;
+        }
+        .carousel-indicators [data-bs-target] {
+            background-color: #6c63ff;
+        }
+    </style>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
-    <!-- Untuk Mengarahkan Langsung ke home.html -->
-    <script>
-        window.location.href = "./pages/home.html";
-    </script>    
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container container-fluid">
+            <a class="navbar-brand" href="#" style="font-weight: 600;"><img src="assets/images/logo-nobg.png" alt="Taskify logo">Taskify</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">How It Works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#signup">Sign Up</a>
+                    </li>
+                    
+                </ul>
+                <a href="#" class="login-button d-flex justify-content-center align-items-center " >Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section">
+        <h1>Tata pekerjaan dan proyek tim Anda</h1>
+        <p><span style="color: #0ab660; font-weight: 600;">Taskify</span> memungkinkan Anda menaruh semua rencana dan proyek di satu tempat, sehingga Anda dapat bekerja secara produktif tanpa kekacauan dan kebingungan.</p>
+        <a href="#" class="button">Get Started</a>
+    </header>
+
+    <section id="features" class="container my-5 mb-4">
+        <h2 class="text-center">Features</h2>
+        <div class="row">
+            <div class="col-md-4 feature">
+                <img src="assets/images/schedule.png" alt="Deadline Icon" style="width: 48px;">
+                <h3>Stay Organized</h3>
+                <p>Track all your tasks in one place with easy categorization.</p>
+            </div>
+            <div class="col-md-4 feature">
+                <img src="assets/images/deadline.png" alt="Deadline Icon" style="width: 48px;">
+                <h3>Never Miss a Deadline</h3>
+                <p>Get reminders for upcoming deadlines and due dates.</p>
+            </div>
+            <div class="col-md-4 feature">
+                <img src="assets/images/test.png" alt="Deadline Icon" style="width: 48px;">
+                <h3>Prioritize with Ease</h3>
+                <p>Organize your tasks by urgency or deadline.</p>
+            </div>
+        </div>
+    </section>
+
+
+
+
+ <!-- Carousel Section -->
+ <div class="container mt-5 mb-5">
+    <h2 class="text-center mb-4">Why customers <span style="color: #6c63ff;">love</span> Taskify</h2>
+    <div id="reviewCarousel" class="carousel slide" data-bs-ride="carousel">
+        <!-- Indicators -->
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#reviewCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#reviewCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#reviewCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+
+        <!-- Carousel items -->
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="card p-2">
+                    <div class="card-body">
+                        <p class="customer-review">"Taskify has been a game-changer for my productivity!"</p>
+                        <p class="customer-name">Robby R. | Reviewed on G2</p>
+                        <div class="star-rating">
+                            ★★★★★
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <div class="card p-2">
+                    <div class="card-body">
+                        <p class="customer-review">"Our team collaboration improved significantly with Taskify."</p>
+                        <p class="customer-name">Reynaldy A. | Reviewed on Trustpilot</p>
+                        <div class="star-rating">
+                            ★★★★★
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <div class="card p-2">
+                    <div class="card-body">
+                        <p class="customer-review">"Managing tasks and deadlines has never been easier!"</p>
+                        <p class="customer-name">Yusran AM. | Reviewed on Capterra</p>
+                        <div class="star-rating">
+                            ★★★★★
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carousel controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#reviewCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#reviewCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+
+
+
+    <footer class="text-center py-4">
+        <p>&copy; 2024 Taskify. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
