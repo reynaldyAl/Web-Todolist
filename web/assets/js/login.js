@@ -1,4 +1,4 @@
-import { User } from '../../H071231057R/web/Assets/javaScript/user.js';
+import { User } from './user.js';
 
 // sessionStorage sama localStorage itu penyimpanan di browser. jadi kalau di close browsernya hilang semua juga datanya lagi. karena tidak bisa menggunakan database atau server jadi datanya disimpan di sini.
 
@@ -36,7 +36,7 @@ document.getElementById('loginForm')?.addEventListener('submit', function(event)
     if (foundUser) {
         // Simpan user ke sessionStorage
         sessionStorage.setItem('user', JSON.stringify(foundUser));
-        window.location.href = 'index.html';
+        window.location.href = 'home.html';
     } else {
         showErrorMessage("Invalid username or password!");
     }
@@ -73,7 +73,8 @@ document.getElementById('logoutButton')?.addEventListener('click', function() {
 
     // Reset tampilan sidebar ke guest setelah logout
     document.getElementById('sidebar-username').textContent = 'Guest';
-    document.getElementById('sidebar-email').textContent = 'guest@example.com';
+    document.getElementById("logoutButton").style.display = "none";
+    document.getElementById("loginButton").style.display = "block";
 });
 
 // Update sidebar dengan informasi user yang sedang login
@@ -81,5 +82,6 @@ const userData = JSON.parse(sessionStorage.getItem('user'));
 if (userData) {
     // Ubah sidebar username dan email berdasarkan data user yang login
     document.getElementById('sidebar-username').textContent = userData.username;
-    document.getElementById('sidebar-email').textContent = userData.email || 'user@example.com'; // Jika tidak ada email, tampilkan default
+    document.getElementById("loginButton").style.display = "none";
+    document.getElementById("logoutButton").style.display = "block";
 }
