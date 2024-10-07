@@ -289,36 +289,6 @@ body, html {
     color: gold;
 }
 
-/* Menambahkan gaya CSS baru untuk tombol "X" di sidebar */
-.list-group-item button, 
-.suggestions ul li button {
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    margin-top: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
-    width: auto; /* Mengatur lebar tombol agar otomatis */
-}
-
-.list-group-item button i, 
-.suggestions ul li button i {
-    font-size: 14px;
-}
-
-.list-group-item button:hover, 
-.suggestions ul li button:hover {
-    background-color: #c82333;
-    transform: translateY(-2px);
-}
-
-/* Mengatur jarak antara due date dan tombol "X" */
-.list-group-item .text-muted {
-    margin-left: 15px;
-}
-
 /* #1 to-do gaya */
 
 /* CATATAN! BELUM ADA X NYA COO PAS TASK DI ADD ITU, TERUS IMPORTAN DAN GROCERIES BELUM */

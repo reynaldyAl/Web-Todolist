@@ -1,170 +1,152 @@
-// Ambil task dari localStorage berdasarkan username yang login
-function getTasksFromStorage(username) {
-    const userTasksData = localStorage.getItem(`tasks_${username}`);
-    return userTasksData ? JSON.parse(userTasksData) : [];
+import { User } from './user.js';
+
+// sessionStorage sama localStorage itu penyimpanan di browser. jadi kalau di close browsernya hilang semua juga datanya lagi. karena tidak bisa menggunakan database atau server jadi datanya disimpan di sini.
+
+function getUsersFromStorage() {
+    const usersData = localStorage.getItem('users');
+    return usersData ? JSON.parse(usersData) : [];
 }
 
-// Simpan task ke localStorage berdasarkan username
-function saveTasksToStorage(username, tasks) {
-    localStorage.setItem(`tasks_${username}`, JSON.stringify(tasks));
+function saveUsersToStorage(users) {
+    localStorage.setItem('users', JSON.stringify(users));
 }
 
-// Cek status login saat halaman dimuat
-document.addEventListener('DOMContentLoaded', function () {
-    const userData = JSON.parse(sessionStorage.getItem('user'));
-    const addTaskButton = document.getElementById('submit-task-btn');
-    const taskInput = document.getElementById('task-input');
-    const dueDateInput = document.getElementById('due-date-input');
+// Fungsi untuk menampilkan error message
+function showErrorMessage(message) {
+    const errorMessage = document.getElementById('error-message');
+    errorMessage.style.display = 'block';
+    errorMessage.textContent = message;
+}
 
-    // Jika user belum login, tombol "Add Task" akan disabled
-    if (!userData) {
-        addTaskButton.disabled = true;
-        addTaskButton.addEventListener('click', function () {
-            alert("Please login to add tasks.");
-            
-            // Hapus input task dan due date setelah alert
-            taskInput.value = '';
-            dueDateInput.value = '';
-        });
+function validateLogin(inputUsername, inputPassword, user) {
+    return user.username === inputUsername && user.password === inputPassword;
+}
+
+document.getElementById('loginForm')?.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    let users = getUsersFromStorage();
+    const foundUser = users.find(user => validateLogin(username, password, user));
+
+    if (foundUser) {
+        sessionStorage.setItem('user', JSON.stringify(foundUser));
+        window.location.href = 'index.html';
+    } else {
+        showErrorMessage("Invalid username or password!");
     }
 });
 
-// Add Task Functionality (pastikan user sudah login)
-document.getElementById('submit-task-btn').addEventListener('click', function () {
-    const userData = JSON.parse(sessionStorage.getItem('user'));
+document.getElementById('registerForm')?.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const username = document.getElementById('newUsername').value;
+    const password = document.getElementById('newPassword').value;
 
-    // Jika user tidak ada, return dan jangan proses lebih lanjut
-    if (!userData) {
-        return;
+    let users = getUsersFromStorage();
+    const userExists = users.find(user => user.username === username);
+    if (userExists) {
+        showErrorMessage("Username already exists!");
+    } else {
+        const newUser = new User(username, password);
+        users.push(newUser);
+        saveUsersToStorage(users);
+        alert("Registration successful! Please log in.");
+        window.location.href = 'login.html';
     }
+});
 
+// Handle logout
+document.getElementById('logoutButton')?.addEventListener('click', function() {
+    sessionStorage.removeItem('user');  
+    location.reload();  
+    document.getElementById('sidebar-username').textContent = 'Guest';
+    document.getElementById('sidebar-email').textContent = '';
+});
+
+// Update sidebar with the logged-in user's info
+const userData = JSON.parse(sessionStorage.getItem('user'));
+if (userData) {
+    document.getElementById('username').textContent = userData.username;
+    document.getElementById('sidebar-username').textContent = userData.username;
+    document.getElementById('sidebar-email').textContent = userData.email || ''; 
+}
+
+// Task management
+const taskList = [];
+let importantTasks = [];
+
+document.getElementById('submit-task-btn').addEventListener('click', function() {
     const taskInput = document.getElementById('task-input').value;
     const dueDate = document.getElementById('due-date-input').value;
     const isImportant = document.getElementById('priority-btn').classList.contains('important');
 
-    if (taskInput.trim() !== '') {
-        const task = {
-            id: Date.now(), // Tambahkan ID unik berdasarkan timestamp
-            text: taskInput,
-            dueDate: dueDate,
-            isImportant: isImportant,
-            isCompleted: false
-        };
+    const task = {
+        text: taskInput,
+        dueDate: dueDate,
+        isImportant: isImportant,
+        isCompleted: false
+    };
 
-        // Ambil task yang tersimpan untuk user yang sedang login
-        let userTasks = getTasksFromStorage(userData.username);
-        userTasks.push(task);
-        saveTasksToStorage(userData.username, userTasks);
-
-        renderTasks();
-        document.getElementById('task-input').value = '';  // Clear input
-        document.getElementById('due-date-input').value = ''; // Clear due date input
-    } else {
-        alert("Please enter a task.");
-    }
+    taskList.push(task);
+    renderTasks();
 });
 
 function renderTasks() {
-    const userData = JSON.parse(sessionStorage.getItem('user'));
-    if (!userData) {
-        return;
-    }
-
     const taskContainer = document.getElementById('my-day-task-list');
     taskContainer.innerHTML = ''; 
 
     const suggestionsContainer = document.getElementById('suggestions-list');
     suggestionsContainer.innerHTML = '';
 
-    let userTasks = getTasksFromStorage(userData.username);
+    taskList.forEach((task, index) => {
+        const li = document.createElement('li');
+        li.classList.add('list-group-item');
+        li.innerHTML = `
+            <input type="checkbox" class="me-2 task-checkbox" data-index="${index}">
+            ${task.text} <small class="text-muted">${task.dueDate}</small>
+        `;
 
-    userTasks.forEach((task) => {
-        const li = createTaskListItem(task);
         taskContainer.appendChild(li);
+        suggestionsContainer.appendChild(li.cloneNode(true)); // Clone to suggestions panel
 
-        const suggestionLi = createTaskListItem(task, true);
-        suggestionsContainer.appendChild(suggestionLi);
+        if (task.isImportant) {
+            importantTasks.push(task);
+            const importantLink = document.getElementById('important-tasks-link');
+            importantLink.innerHTML = `<i class="bi bi-star"></i> Important (${importantTasks.length})`;
+        }
     });
 
-    attachCheckboxListeners(userData.username);
-    attachDeleteTaskListeners(userData.username);
-    renderCompletedTasks();  // Re-render completed tasks
+    attachCheckboxListeners();
 }
 
-function createTaskListItem(task, isSuggestion = false) {
-    const li = document.createElement('li');
-    li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
-    li.innerHTML = `
-        <div class="d-flex align-items-center">
-            <input type="checkbox" class="me-2 task-checkbox" data-id="${task.id}" ${task.isCompleted ? 'checked' : ''}>
-            <span>${task.text}</span>
-        </div>
-        <div class="d-flex align-items-center">
-            <small class="text-muted me-3">${task.dueDate}</small>
-            <button class="btn btn-danger btn-sm delete-task-btn" data-id="${task.id}" ${isSuggestion ? 'data-suggestion="true"' : ''}>
-                <i class="fa fa-times"></i>
-            </button>
-        </div>
-    `;
-    return li;
-}
-
-// Attach Checkbox Listener
-function attachCheckboxListeners(username) {
+function attachCheckboxListeners() {
     const checkboxes = document.querySelectorAll('.task-checkbox');
     checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            const taskId = parseInt(this.dataset.id);
-            let userTasks = getTasksFromStorage(username);
-            const task = userTasks.find(task => task.id === taskId);
-            if (task) {
-                task.isCompleted = this.checked;
-                saveTasksToStorage(username, userTasks);
-                renderTasks();  // Re-render tasks to reflect checkbox status
-            }
+        checkbox.addEventListener('change', function() {
+            const taskIndex = this.dataset.index;
+            taskList[taskIndex].isCompleted = this.checked;
+            renderCompletedTasks();
         });
     });
 }
 
-// Attach Delete Task Listener
-function attachDeleteTaskListeners(username) {
-    const deleteButtons = document.querySelectorAll('.delete-task-btn');
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const taskId = parseInt(this.dataset.id);
-            let userTasks = getTasksFromStorage(username);
-            userTasks = userTasks.filter(task => task.id !== taskId); // Remove task by ID
-            saveTasksToStorage(username, userTasks);
-            renderTasks();  // Re-render the tasks in all panels
-        });
-    });
-}
-
-// Completed Task Render
 function renderCompletedTasks() {
     const completedTasksContainer = document.getElementById('completed-tasks-list');
     completedTasksContainer.innerHTML = ''; 
 
-    const userData = JSON.parse(sessionStorage.getItem('user'));
-    if (!userData) {
-        return;
-    }
-
-    let userTasks = getTasksFromStorage(userData.username);
-
-    userTasks.forEach((task) => {
+    taskList.forEach(task => {
         if (task.isCompleted) {
             const li = document.createElement('li');
-            li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
-            li.innerHTML = `
-                <div>${task.text}</div>
-                <button class="btn btn-danger btn-sm delete-task-btn" data-id="${task.id}">
-                    <i class="fa fa-times"></i>
-                </button>
-            `;
+            li.classList.add('list-group-item');
+            li.textContent = task.text;
             completedTasksContainer.appendChild(li);
         }
     });
-
-    attachDeleteTaskListeners(userData.username);  // Reattach delete listeners to completed tasks
 }
+
+
+
+document.getElementById('priority-btn').addEventListener('click', function() {
+    this.classList.toggle('important');
+});
